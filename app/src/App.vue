@@ -2,7 +2,7 @@
   <div id="app">
     <app-header />
     <div>
-      <h1>Ubuntu Core Over the Air Update</h1>
+      <h1>Skidooman</h1>
       <div class="progress">
         <h1>Battery Level</h1>
         <ve-progress :progress="battery_level" />

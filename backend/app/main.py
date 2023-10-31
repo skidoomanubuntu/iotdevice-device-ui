@@ -32,7 +32,7 @@ def refresh():
 
 @app.post("/revert")
 def revert(snap: Snap):
-    print(snap.name)
+    print (snap.name)
     response = snap_client.revert(snap.name)
     return response
 
