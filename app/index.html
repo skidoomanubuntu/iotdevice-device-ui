@@ -20,6 +20,7 @@
             font-family: 'Ubuntu', sans-serif;
             font-weight: 300;
 	    color: white;
+	    overflow: hidden;
         }
 
         body > div {
@@ -161,7 +162,9 @@
 
 
         .auto_col_1 { flex: 1; text-align: center;}
-        .auto_col_2 { width: 330px; border-left:1px solid #333;padding: 20px;  }
+        .auto_col_2 { width: 100%; height: 100%; border-left:0px solid #333;padding: 20px; 
+			overflow:hidden; max-height:250px; 
+			display: flex; flex-direction: column-reverse; }
         
         #dashboard { margin: 0 auto;}
 
@@ -238,14 +241,13 @@
 </head>
 <body onload="document.body.classList.add('auto');start(true);">
     <div>
-	<table border="0"><tr><td>
+	<table border="0"><tr><td colspan="3">
 		<h3>Update demo</h3>
 	</td></tr>
 
-	<tr><td>
+	<tr><td width="30%" style="min-width:200px;">&nbsp;</td>
+	<td align="center">
             <div id="auto">
-
-
 
                 <div class="auto_col_1">
 
@@ -440,22 +442,27 @@
                     </div>
                     
 
-                    <div class="btn_group">
+                    <!--<div class="btn_group">
                         <a class="btn" id="btn_startstop">Start/Stop vehicle</a>
                         <a class="btn" id="btn_revert">Revert to V1</a>
                         <a class="btn" id="btn_clear">Clear log</a>
                         <a class="btn to_be_removed" id="fake_update1">V2_1</a>
                         <a class="btn to_be_removed" id="fake_update2">V2_2</a>
                         <a class="btn to_be_removed" id="fake_update3">Err</a>
-                    </div>
+                    </div>-->
                 
                 </div>
-                <div class="auto_col_2">
+               
+
+            </div>
+	</td>
+	<td width="30%"></td></tr>
+	<tr height="100%"><td colspan="3">
                     <h5>Log</h5>
+ 		<div class="auto_col_2">
                     <div id="log_status"></div>
                 </div>
 
-            </div>
 	</td></tr></table>
 
     </div>
@@ -466,6 +473,7 @@
 
 
     <script>
+        var currentColor = '';
 	function start(startup) {
 	    if (startup) AUTO.logger("Vehicle " + (AUTO.vehicle_on ? 'stopping' : 'starting'));
 	    else AUTO.logger("Vehicle update processing");
@@ -476,7 +484,8 @@
 
 	    fetch('http://' + url + ':4040/dashboard-color')
 		.then(function(response) { return response.json(); })
-		.then(function(data) { 
+		.then(function(data) {
+			if (data['color'] == currentColor) return; 
 			console.log(data);
 			AUTO.dashboard.classList.remove('V1', 'V2_1', 'V2_2', 'error');
 			switch(data['color']){
@@ -493,6 +502,7 @@
 					AUTO.dashboard.classList.add('error');
 					break;
 			}
+			currentColor = data['color'];
 			AUTO.dashboard.classList.toggle('off');
 			AUTO.logger("Dashboard updated with color " + data['color']);
 			if (!startup) AUTO.dashboard.classList.toggle('off');
@@ -591,7 +601,7 @@
         AUTO.vehicle_on = false;
 
 
-        AUTO.btn_startstop.addEventListener("click", function(e) {
+        /*AUTO.btn_startstop.addEventListener("click", function(e) {
 		start(false);
 
         });
@@ -615,7 +625,7 @@
                 AUTO.dashboard.classList.add('error');
                 AUTO.queued_update = AUTO.current_update;
             }, 3000);
-        })
+        })*/
 
 
         AUTO.logger = function(str) {
