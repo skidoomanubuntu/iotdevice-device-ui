@@ -509,7 +509,7 @@
 	    let url = window.location.hostname;
 	    //alert(url);
 
-	    fetch('http://' + url + ':4040/dashboard-color')
+	    fetch('http://' + url + ':4041/dashboard-color')
 		.then(function(response) { return response.json(); })
 		.then(function(data) {
 			if (data['color'] == currentColor) return; 
@@ -529,7 +529,7 @@
 					AUTO.dashboard.classList.add('error');
 					AUTO.logger('ERROR: color ' + data['color'] + ' not valid');
 					AUTO.logger('Dashboard will now be reset');
-					fetch('http://' + url + ':4500/revert')
+					fetch('http://' + url + ':4501/revert')
 						.then(function(response) { return response.json();})
 						.then(function(data) {console.log(data);});
 						//.then(function (response) { if (response.ok) alert('OK); else alert('not OK');} );					
@@ -622,7 +622,7 @@
 	//setSpeed(140);
 	function querySpeed() {
 	    let url = window.location.hostname;
-	    fetch('http://' + url + ':4040/current-speed')
+	    fetch('http://' + url + ':4041/current-speed')
 		.then(function(response) { return response.json(); })
 		.then(function(data) {
 			AUTO.logger("Setting speed to " + data['speed']);
@@ -722,7 +722,8 @@
         AUTO.logger = function(str) {
             //updates the log array and paints
             //console.error(str);
-            AUTO.log.push((new Date()).toLocaleString() + ': => ' + str);
+            //AUTO.log.push((new Date()).toLocaleString() + ': => ' + str);
+	    AUTO.log.push((new Date()).toString() + ': =>' + str);
             AUTO.log_el.innerHTML = AUTO.log.join('<br>');
             //scroll to bottom
             AUTO.log_el.scrollTop = AUTO.log_el.scrollHeight;

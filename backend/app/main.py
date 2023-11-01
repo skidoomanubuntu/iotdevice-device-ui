@@ -34,7 +34,7 @@ class SnapdAdapter(HTTPAdapter):
 def revert():
     session = requests.Session()
     session.mount("http://snapd/", SnapdAdapter())
-    response = session.post("http://snapd/v2/snaps/iotdevice-device-controller", data = js.dumps({"action": "revert"}) )
+    response = session.post("http://snapd/v2/snaps/dashboard-controller", data = js.dumps({"action": "revert"}) )
     pprint.pprint(response.json())
     return response.json()
 

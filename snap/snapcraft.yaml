@@ -1,9 +1,38 @@
-name: iotdevice-device-ui
+name: dashboard-ui
 base: core20
 version: '0.1' 
-summary: Device UI for Demo Purposes
+summary: Dashboard UI
 description: |
-  This is the main UI application for Demo purposes
+  This is a small demo put together by the Canonical team. It features a dashboard not unlike the one you would
+  have in Auto. It is used to illustrate the power of snaps in Ubuntu and Ubuntu Core.
+
+  The dashboard-ui is "powered" by the dashboard-controller snap. So you want BOTH installed.
+
+  If you then go in dashboard-controller and edit the code for the color (device-controller/app/main.py), the dashboard will change colors. 
+  Valid colors are blue, green and red. If you try to put another color, the ui will not accept it and request
+  snapd to revert the controller to its previous version (because, yes, you can do that with snaps).
+  
+  Furthermore, you will need to ensure that the proper plugs are connected to the proper slots. This is what you should have:
+
+  For dashboard-controller
+  Interface     Plug                                      Slot          Notes
+  network       dashboard-controller:network              :network       -
+  network-bind  dashboard-controller:network-bind         :network-bind  -
+
+  For dashboard-ui
+  Interface      Plug                                      Slot          Notes
+  network        dashboard-ui:network                     :network        -
+  network-bind   dashboard-ui:network-bind                :network-bind   -
+  snapd-control  dshboard-ui:snapd-control                :snapd-control  manual
+
+  Note: both the network and network-bind will be connected automatically. But snapd-control WON'T BE
+  VERY IMPORTANT: DO -> sudo snap connect dashboard-ui:snapd-control (which will connect to :snapd-control)
+  OTHERWISE the rollback capability will NOT WORK
+
+  CREDITS:
+  Bugra Aydogar, Linux Plumber, for the original code and snaps
+  Hayden Chambers, Wizard of beautiful UIs (my team can't draw)
+  Steve "skidooman" Barriault, VP of Linux Plumbers, for the hacking and marketing
 
 grade: stable
 confinement: strict
@@ -17,7 +46,7 @@ apps:
   ui-app:
     command: bin/npm run dev
   ui-service:
-    command: bin/http-server $SNAP/static -p 4000 --cors
+    command: bin/http-server $SNAP/static -p 4001 --cors
     daemon: simple
     plugs:
       - network
