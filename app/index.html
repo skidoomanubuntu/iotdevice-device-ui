@@ -170,7 +170,7 @@
             transform-origin: 1.5% 55%;
             /*transform: rotate(-120deg);
             transition: all 0.5s linear;*/
-            animation: bounceIn 1.5s forwards;
+            //animation: bounceIn 1.5s forwards;
             fill: #CB0808;
         }
 
@@ -306,7 +306,7 @@
                                 <path class="fadeIn" id="hb3" d="M370.068 213.746C369.843 213.746 369.611 213.676 369.423 213.523C368.981 213.16 368.92 212.514 369.273 212.08C375.415 204.549 369.565 197.933 369.31 197.652C368.935 197.229 368.965 196.584 369.377 196.197C369.797 195.822 370.442 195.845 370.825 196.267C370.9 196.35 378.138 204.455 370.862 213.371C370.66 213.617 370.367 213.746 370.068 213.746Z" fill="#EC1D27"/>
                                 <path class="fadeIn" id="hb4" d="M351.408 213.746C351.116 213.746 350.816 213.617 350.613 213.371C343.346 204.455 350.575 196.35 350.65 196.267C351.033 195.845 351.685 195.822 352.106 196.197C352.518 196.584 352.548 197.229 352.166 197.652C351.91 197.933 346.068 204.549 352.204 212.08C352.564 212.514 352.496 213.16 352.06 213.523C351.866 213.676 351.64 213.746 351.408 213.746Z" fill="#EC1D27"/>
                                 <!-- parking -->
-                                <path class="fadeIn" d="M361.218 155.495C364.842 155.495 367.614 156.155 369.534 157.475C371.478 158.795 372.45 160.859 372.45 163.667C372.45 165.131 372.186 166.391 371.658 167.447C371.154 168.479 370.41 169.331 369.426 170.003C368.442 170.651 367.242 171.131 365.826 171.443C364.41 171.755 362.79 171.911 360.966 171.911H358.698V180.695H354.162V156.107C355.218 155.867 356.382 155.711 357.654 155.639C358.95 155.543 360.138 155.495 361.218 155.495ZM361.542 159.419C360.39 159.419 359.442 159.455 358.698 159.527V168.023H360.894C363.078 168.023 364.758 167.723 365.934 167.123C367.11 166.499 367.698 165.335 367.698 163.631C367.698 162.815 367.542 162.131 367.23 161.579C366.918 161.027 366.486 160.595 365.934 160.283C365.382 159.971 364.722 159.755 363.954 159.635C363.21 159.491 362.406 159.419 361.542 159.419Z" fill="white"/>
+                                <!-- <path class="fadeIn" d="M361.218 155.495C364.842 155.495 367.614 156.155 369.534 157.475C371.478 158.795 372.45 160.859 372.45 163.667C372.45 165.131 372.186 166.391 371.658 167.447C371.154 168.479 370.41 169.331 369.426 170.003C368.442 170.651 367.242 171.131 365.826 171.443C364.41 171.755 362.79 171.911 360.966 171.911H358.698V180.695H354.162V156.107C355.218 155.867 356.382 155.711 357.654 155.639C358.95 155.543 360.138 155.495 361.218 155.495ZM361.542 159.419C360.39 159.419 359.442 159.455 358.698 159.527V168.023H360.894C363.078 168.023 364.758 167.723 365.934 167.123C367.11 166.499 367.698 165.335 367.698 163.631C367.698 162.815 367.542 162.131 367.23 161.579C366.918 161.027 366.486 160.595 365.934 160.283C365.382 159.971 364.722 159.755 363.954 159.635C363.21 159.491 362.406 159.419 361.542 159.419Z" fill="white"/> -->
                                 
                                <g transform="translate(1 1)">
                                     <path d="M655.855 221.349C665.902 203.716 671.643 183.309 671.643 161.562C671.643 94.7701 617.497 40.6245 550.705 40.6245C483.913 40.6245 429.768 94.7701 429.768 161.562C429.768 183.607 435.666 204.274 445.97 222.071L546.972 162.8C549.785 161.149 553.27 161.149 556.083 162.8L655.855 221.349Z" fill="#222222"/>
@@ -551,10 +551,17 @@
 					break;
 			}
 			currentColor = data['color'];
-			AUTO.dashboard.classList.toggle('off');
+			if (startup){
+				AUTO.dashboard.classList.toggle('off');
+				document.getElementById("guage").animate([
+					{transform: "rotate(0deg)"},
+					{transform: "rotate(-110deg)"}],
+				{ duration: 1500},);
+				document.getElementById("guage").style.transform = "rotate(-110deg)";
+			}
 			AUTO.logger("Dashboard updated with color " + data['color']);
-			if (!startup) AUTO.dashboard.classList.toggle('off');
-			else AUTO.vehicle_on = !AUTO.vehicle_on;
+			//if (!startup) AUTO.dashboard.classList.toggle('off');
+			//else AUTO.vehicle_on = !AUTO.vehicle_on;
 			//alert('done');
 		})
 		.catch(error => console.error('Error', error));
@@ -594,6 +601,7 @@
 	}*/
 
 	let currentSpeed = 0;
+	let revGauge = -90;
 	function setSpeed(speed) {
 		// Speed is anywhere between 0 and 140
 		// It translates from 0 == -120deg to 140 == 90deg
@@ -630,6 +638,21 @@
 			{ duration: time},
 		);
 		document.getElementById("lguage").style.transform = "rotate("+targetDegrees+"deg)";
+
+		// For the gauge, stipulate that it will rev up during accelerations to the same degrees as target
+		// Then settle to 30%
+		AUTO.logger(targetDegrees);
+		document.getElementById("guage").animate([
+			{transform: "rotate(" + revGauge + "deg)"},
+			{transform: "rotate(" + targetDegrees + "deg)"},
+			{transform: "rotate(" + targetDegrees + "deg)"},
+			{transform: "rotate(" + Math.round(targetDegrees*0.85) + "deg)"},
+			{transform: "rotate(" + Math.round(targetDegrees*0.7) + "deg)"}],
+			{ duration: time},
+		);
+		revGauge = Math.round(targetDegrees*0.70);
+		AUTO.logger(revGauge);
+		document.getElementById("guage").style.transform = "rotate(" + revGauge + "deg)";
 
 		currentSpeed = speed;
 	}
@@ -744,7 +767,7 @@
             AUTO.log_el.scrollTop = AUTO.log_el.scrollHeight;
         }
 
-        AUTO.queue_update = function(version) {
+        /*AUTO.queue_update = function(version) {
             setTimeout(function() { 
                 AUTO.logger('Downloading ' + version) 
             }, 0);
@@ -757,14 +780,14 @@
                 AUTO.status_el.textContent = AUTO.status;
                 AUTO.queued_update = version;
             }, 3000);
-        } 
+        } */
 
 
 
 
         //for fun
-        AUTO.status_el.addEventListener("mousedown", function(e) { AUTO.dashboard.classList.add('rev');})
-        AUTO.status_el.addEventListener("mouseup", function(e) { AUTO.dashboard.classList.remove('rev');})
+        //AUTO.status_el.addEventListener("mousedown", function(e) { AUTO.dashboard.classList.add('rev');})
+        //AUTO.status_el.addEventListener("mouseup", function(e) { AUTO.dashboard.classList.remove('rev');})
 
 
 
