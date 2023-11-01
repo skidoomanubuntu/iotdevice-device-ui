@@ -15,5 +15,7 @@ class SnapdClient():
         return response.json()
 
     def revert(self, snap):
+        print ('in revert')
         response = self.session.post("http://snapd/v2/snaps/"+snap, json={"action": "revert"})
+        print ('ok')
         return response.json()
