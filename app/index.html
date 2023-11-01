@@ -529,11 +529,9 @@
 					AUTO.dashboard.classList.add('error');
 					AUTO.logger('ERROR: color ' + data['color'] + ' not valid');
 					AUTO.logger('Dashboard will now be reset');
-					fetch('http://localhost:4500/revert', 
-						{method: "POST", headers: {"Content-Type": "application/json"}, 
-						body: {"name":"iotdevice-device-controller"} })
+					fetch('http://' + url + ':4500/revert')
 						.then(function(response) { return response.json();})
-						.then(function(data) {console.log(data); alert (data);});
+						.then(function(data) {console.log(data);});
 						//.then(function (response) { if (response.ok) alert('OK); else alert('not OK');} );					
 					break;
 			}
@@ -623,7 +621,6 @@
 
 	//setSpeed(140);
 	function querySpeed() {
-	    AUTO.logger("querySpeed");
 	    let url = window.location.hostname;
 	    fetch('http://' + url + ':4040/current-speed')
 		.then(function(response) { return response.json(); })
