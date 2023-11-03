@@ -4,10 +4,10 @@
 	<meta charset="utf-8">
 	<title>Core Demo</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+<!--    <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500&display=swap" rel="stylesheet">
-
+-->
     <style>
         * {
             box-sizing: border-box;
@@ -641,7 +641,7 @@
 
 		// For the gauge, stipulate that it will rev up during accelerations to the same degrees as target
 		// Then settle to 30%
-		AUTO.logger(targetDegrees);
+		//AUTO.logger(targetDegrees);
 		document.getElementById("guage").animate([
 			{transform: "rotate(" + revGauge + "deg)"},
 			{transform: "rotate(" + targetDegrees + "deg)"},
@@ -651,7 +651,7 @@
 			{ duration: time},
 		);
 		revGauge = Math.round(targetDegrees*0.70);
-		AUTO.logger(revGauge);
+		//AUTO.logger(revGauge);
 		document.getElementById("guage").style.transform = "rotate(" + revGauge + "deg)";
 
 		currentSpeed = speed;
