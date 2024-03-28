@@ -6,6 +6,7 @@ from urllib3.connection import HTTPConnection
 from urllib3.connectionpool import HTTPConnectionPool
 from requests.adapters import HTTPAdapter
 import requests, socket, pprint, json as js
+import os
 
 app = FastAPI()
 
@@ -37,6 +38,16 @@ def revert():
     response = session.post("http://snapd/v2/snaps/dashboard-controller", data = js.dumps({"action": "revert"}) )
     pprint.pprint(response.json())
     return response.json()
+
+@app.get("/update/{color}")
+def update(color: str):
+   #command = 'sudo curl -sS --unix-socket /run/snapd.socket -H "Content-type: multipart/form-data" -F filename=controller-%s.snap -F snap="@controller-%s.snap" -F dangerous="true"   http://localhost/v2/snaps' % (color, color)
+   session = requests.Session()
+   session.mount("http://snapd/", SnapdAdapter())
+   print (os.getcwd())
+   response = session.post("http://snapd/v2/snaps", files=dict(filename='/var/snap/dashboard-ui/common/controller-%s.snap' % color, snap=open('/var/snap/dashboard-ui/common/controller-%s.snap' % color, 'rb')), data={"dangerous":"true"} )
+   pprint.pprint(response.json())
+   return response.json()
 
 '''from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
