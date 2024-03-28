@@ -474,14 +474,15 @@
                     </div>
                     
 
-                    <!--<div class="btn_group">
-                        <a class="btn" id="btn_startstop">Start/Stop vehicle</a>
+                    <div class="btn_group">
+                        <!--<a class="btn" id="btn_startstop">Start/Stop vehicle</a>
                         <a class="btn" id="btn_revert">Revert to V1</a>
-                        <a class="btn" id="btn_clear">Clear log</a>
-                        <a class="btn to_be_removed" id="fake_update1">V2_1</a>
-                        <a class="btn to_be_removed" id="fake_update2">V2_2</a>
-                        <a class="btn to_be_removed" id="fake_update3">Err</a>
-                    </div>-->
+                        <a class="btn" id="btn_clear">Clear log</a>-->
+                        <a class="btn" id="update_green" onclick='updateREST_API("green")'>Update Snap Green</a>
+                        <a class="btn" id="update_red" onclick='updateREST_API("red")'>Update Snap Red</a>
+                        <a class="btn" id="update_blue" onclick='updateREST_API("blue")'>Update Snap Blue</a>
+			<a class="btn" id="update_error" onclick='updateREST_API("error")'>Update Snap Error</a>
+                    </div>
                 
                 </div>
                
@@ -509,6 +510,16 @@
 		document.getElementById('hb2').setAttribute('fill', color);
 		document.getElementById('hb3').setAttribute('fill', color);
 		document.getElementById('hb4').setAttribute('fill', color);
+	}
+
+	// This calls the REST API and instructs a new version of the controller snap to be installed
+	// The snap must be present in /var/snap/dashboard-ui/common
+	function updateREST_API(color){
+		let url = window.location.hostname;
+		fetch('http://' + url + ':4501/update/' + color)
+			.then(function (response) { return response.json();})
+			.then(function (data) { console.log(data);})
+			.catch(error => console.error('Error', error))
 	}
 
 	function start(startup) {
