@@ -41,6 +41,11 @@ architectures:
   - build-on: arm64
   - build-on: amd64
 
+plugs:
+  snapd:
+    interface: snapd-control
+    refresh-schedule: managed
+
 
 apps:
   ui-app:
@@ -57,7 +62,7 @@ apps:
     plugs:
       - network
       - network-bind
-      - snapd-control
+      - snapd
 
 parts:
   ui:
